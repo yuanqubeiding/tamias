@@ -33,7 +33,7 @@ from tamias.i18n import tr
 from tamias.fonts import mono_font, ui_font
 from tamias import app_log
 from tamias import memory_store
-from tamias.usage_viewer import USAGE_DIR, USAGE_FILES
+from tamias.usage_viewer import usage_markdown
 from tamias.ui_icons import icon, strip_leading_emoji
 from tamias.theme import WARM, DARK
 
@@ -577,14 +577,7 @@ class DocPage(QWidget):
         self._load()
 
     def _load(self):
-        path = USAGE_DIR / USAGE_FILES["使用说明"]
-        if path.exists():
-            try:
-                md = path.read_text(encoding="utf-8")
-            except OSError:
-                md = tr("文档读取失败：{}", str(path))
-        else:
-            md = tr("文档缺失：{}", str(path))
+        md = usage_markdown()
         self._browser.setMarkdown(md)
 
     def apply_theme(self, dark: bool):

@@ -117,6 +117,7 @@ class Persona:
             )
 
         name = self._persona.get("name", "栗栗")
+        name_en = self._persona.get("name_en", "") or ""
         one_line = self._persona.get("one_line", "")
         anchors = self._persona.get("anchors", {}) or {}
         appearance = self._persona.get("appearance", "")
@@ -124,7 +125,11 @@ class Persona:
         catchphrases = self._persona.get("catchphrases", {}) or {}
         backstory = str(self._persona.get("backstory", "") or "").strip()
 
-        lines = [f"你是{name}。"]
+        # 非中文界面用英文名（Tamias），避免模型把中文名「栗栗」音译成拼音
+        if name_en and lang not in ("zh-CN", "zh-TW"):
+            lines = [f"Your name is {name_en}. Always refer to yourself as {name_en}."]
+        else:
+            lines = [f"你是{name}。"]
         if one_line:
             lines += ["", "【你是谁】", str(one_line)]
         if anchors:

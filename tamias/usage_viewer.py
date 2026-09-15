@@ -12,7 +12,7 @@
 from pathlib import Path
 
 from tamias.legal_viewer import LegalTextViewer
-from tamias.i18n import tr
+from tamias.i18n import tr, current_language
 
 
 # 使用说明文档目录：项目根/docs/usage/（打包时需把 docs/usage/ 一起带上）
@@ -24,6 +24,18 @@ USAGE_FILES = {
 }
 
 
+def usage_markdown() -> str:
+    """按当前界面语言返回使用说明正文：英文界面读英文版，其余读中文版（缺英文回中文）。"""
+    filename = "使用说明.en.md" if current_language() == "en" else "使用说明.md"
+    path = USAGE_DIR / filename
+    if not path.exists():
+        path = USAGE_DIR / "使用说明.md"
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return tr("文档读取失败：{}", str(path))
+
+
 def show_usage_guide(title: str = "使用说明", parent=None):
     """打开「使用说明」阅读对话框。
 
@@ -31,14 +43,5 @@ def show_usage_guide(title: str = "使用说明", parent=None):
         title: 文档名（中文原文当 i18n key，默认「使用说明」）。
         parent: 父窗口（设置窗/桌宠窗等），用于对话框定位。
     """
-    filename = USAGE_FILES.get(title)
-    path = USAGE_DIR / filename if filename else None
-    if path is not None and path.exists():
-        try:
-            markdown = path.read_text(encoding="utf-8")
-        except Exception:
-            markdown = tr("文档读取失败：{}", str(path))
-    else:
-        markdown = tr("文档缺失：{}", str(path) if path else title)
-    dlg = LegalTextViewer(title, markdown, parent=parent)
+    dlg = LegalTextViewer(title, usage_markdown(), parent=parent)
     dlg.exec()
