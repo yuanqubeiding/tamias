@@ -1,10 +1,13 @@
 # 只构建、不发布。
-# 每次推送到 master（或手动触发）时，在 Windows 上跑 build.py，
-# 验证代码能干净打包成 dist/tamias，产物作为 artifact 存档（不进 Release）。
+# 每次推送到 master（或手动触发）时，在 Windows 上：
+#   1) 现场准备 runtime（node v24.16.0 便携版 + dsh 干活引擎，均公开可下载）
+#   2) 跑 build.py，打出「界面 + 闲聊 + 干活」完整版 dist/tamias
+#   3) 产物作为 artifact 存档（不进 Release）。
 #
-# 注意：本 workflow 产出的版本不含「干活」功能——runtime（node + dsh，245MB）
-# 未进 git（.gitignore 挡了 runtime/），CI 上不存在，build.py 会按设计跳过。
-# 要打含干活的完整版，需另行把 runtime 拉进构建机（后续再议）。
+# runtime 构成（对齐 dsh_launcher.py 的定位规则）：
+#   runtime/node/node.exe   ← node 便携版
+#   runtime/dsh/lib/bin.js  ← dsh 引擎入口
+#   runtime/dsh/node_modules ← dsh 依赖树
 
 name: build
 
@@ -12,6 +15,10 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+
+env:
+  # 修 Windows 控制台默认 cp1252 编码导致 build.py print 中文报 UnicodeEncodeError
+  PYTHONUTF8: '1'
 
 jobs:
   build:
@@ -25,6 +32,28 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+
+      - name: 准备 runtime（node v24.16.0 便携版 + dsh）
+        shell: pwsh
+        run: |
+          # 1. node 便携版 → runtime/node/
+          Invoke-WebRequest -Uri "https://nodejs.org/dist/v24.16.0/node-v24.16.0-win-x64.zip" -OutFile node.zip
+          Expand-Archive -Path node.zip -DestinationPath .
+          New-Item -ItemType Directory -Path runtime -Force | Out-Null
+          Move-Item -Path "node-v24.16.0-win-x64" -Destination "runtime/node"
+          Remove-Item node.zip
+
+          # 2. dsh → runtime/dsh/（npm pack 解包 + 装依赖，复现 lib/bin.js 结构）
+          New-Item -ItemType Directory -Path "runtime/dsh" -Force | Out-Null
+          Push-Location "runtime/dsh"
+          & "..\node\npm.cmd" pack "@deepseek-ai/dsh@0.1.0-rc.6" | Out-Null
+          $tgz = Get-ChildItem -Filter "*.tgz" | Select-Object -First 1
+          tar -xzf $tgz.FullName
+          Get-ChildItem "package" | Move-Item -Destination .
+          Remove-Item -Recurse -Force "package"
+          Remove-Item $tgz.FullName
+          & "..\node\npm.cmd" install --omit=dev
+          Pop-Location
 
       - name: 安装依赖 + PyInstaller
         run: |
