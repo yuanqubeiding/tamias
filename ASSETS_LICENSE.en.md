@@ -20,6 +20,6 @@ copyright belongs to the author of "栗栗 (Tamias)" (github.com/yuanqubeiding):
 - **Non-commercial use**: free. Must credit the asset source and link this repository.
 - **Commercial use (annual revenue < ¥100,000)**: free, but the asset source must be prominently credited (e.g. on first launch) with a link to this repository.
 - **Commercial use (annual revenue ≥ ¥100,000, or otherwise)**: contact the author for authorization via GitHub: github.com/yuanqubeiding.
-- **Redistributing assets**: must keep this statement intact, and must not charge for the assets themselves.
+- **Redistributing assets**: must keep this statement intact, must not charge for the assets themselves, and **must not profit from selling the asset files themselves** (selling the illustration/animation as a standalone product is infringement).
 
 > This statement is modeled on VPet (LorisYounger/VPet)'s "Apache-2.0 code + separately-copyrighted pet animations" model.
