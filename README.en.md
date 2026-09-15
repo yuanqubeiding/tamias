@@ -2,6 +2,11 @@
 
 > English translation for reference; the Chinese original prevails.
 
+> ⚠️ **Current status: MVP (early stage), not yet 1.0**: due to time and resource constraints,
+> this product has **not been thoroughly tested** and may contain functional defects, stability,
+> or compatibility issues — do not use it in critical/production scenarios.
+> If you find significant problems, please report them via [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues).
+
 > A Windows desktop-pet "AI butler": chats with you, does real work for you,
 > every action passes an approval gate first, and mistakes can be rolled back with one click.
 > 栗栗 is a squirrel detective in a plaid trench coat and deerstalker hat, with the
