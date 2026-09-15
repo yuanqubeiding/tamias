@@ -5,6 +5,10 @@
 # Settings → DeepSeek API → dsh → Gate → PetWindow → TrayIcon
 # ============================================================
 
+import os
+# 虚拟机/无独立 GPU 环境下 QWebEngine 硬件加速会白屏：禁用 GPU 回退软件渲染。
+# 必须在任何 Qt / PySide6 模块 import 之前设置，否则不生效。
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
 import sys
 import signal
 import time

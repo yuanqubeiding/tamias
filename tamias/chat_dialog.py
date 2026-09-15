@@ -373,6 +373,7 @@ class ChatDialog(QDialog):
         # （原左侧「历史/项目」侧边栏已删除：打开/新建/最近项目都归到启动器，见 future-plans）
         self._content_area = QSplitter(Qt.Orientation.Horizontal)
         self._content_area.setChildrenCollapsible(False)
+        self._content_area.setHandleWidth(8)  # 分隔条加宽：默认 4~5px 太窄，虚拟机里鼠标难抓
 
         # --- 左侧消息区（包一层 QWidget，QSplitter 只吃 widget）---
         msg_area = QWidget()
@@ -605,7 +606,7 @@ class ChatDialog(QDialog):
         import subprocess, os, sys, tempfile
 
         project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        lock = os.path.join(tempfile.gettempdir(), 'tamias', 'instance.pid')
+        lock = os.path.join(tempfile.gettempdir(), 'tamias', 'instance.lock')
 
         for _ in range(count):
             try:

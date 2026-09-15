@@ -805,7 +805,7 @@ class PetWindow(QMainWindow):
         import os, sys, subprocess, tempfile
         project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # 先清锁，否则新进程会误判「栗栗已经在运行」而退出
-        lock = os.path.join(tempfile.gettempdir(), 'tamias', 'instance.pid')
+        lock = os.path.join(tempfile.gettempdir(), 'tamias', 'instance.lock')
         try:
             if os.path.exists(lock):
                 os.remove(lock)
