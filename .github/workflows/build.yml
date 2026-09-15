@@ -1,0 +1,42 @@
+# 只构建、不发布。
+# 每次推送到 master（或手动触发）时，在 Windows 上跑 build.py，
+# 验证代码能干净打包成 dist/tamias，产物作为 artifact 存档（不进 Release）。
+#
+# 注意：本 workflow 产出的版本不含「干活」功能——runtime（node + dsh，245MB）
+# 未进 git（.gitignore 挡了 runtime/），CI 上不存在，build.py 会按设计跳过。
+# 要打含干活的完整版，需另行把 runtime 拉进构建机（后续再议）。
+
+name: build
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: 安装依赖 + PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: 打包（build.py，spec 驱动 + GPL-only Qt 源头过滤）
+        run: python build.py
+
+      - name: 上传构建产物（artifact，非 release）
+        uses: actions/upload-artifact@v4
+        with:
+          name: tamias-windows
+          path: dist/tamias/
+          if-no-files-found: error
