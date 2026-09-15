@@ -1,0 +1,9 @@
+{
+  "name": "nod",
+  "fps": 15,
+  "frames": 30,
+  "width": 297,
+  "height": 560,
+  "logical_scale": 2,
+  "source": "高清完整点头.mov（Wan2.2 图生视频，ProRes 4444 带 alpha，960x1664@15fps，4.6s，左键点击头部触发的点头动作）"
+}

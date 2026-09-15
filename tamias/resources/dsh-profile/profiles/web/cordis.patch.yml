@@ -1,0 +1,51 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+
+# 栗栗方案 B：逐操作审批门禁插件（写在同目录 yy-approval-gate.js）。
+# 只读工具放行；写文件/执行命令/联网抓取/委派/编排等危险工具触发逐操作审批。
+- insert:
+    - id: yy-approval-gate
+      name: './yy-approval-gate.mjs'
+
+# ── 联网搜索限流（治标）────────────────────────────
+# 背景：dsh 的 web 搜索默认 searchTimeoutMs 60s、maxUses 5，搜个信息要等很久、
+# 烧 token（用户 2026-09-07 观察「88s 才终止」）。折中取 30s / 3 次（2026-09-08
+# 用户拍板「给点冗余」）：正常搜索 5-10s 用不满超时，30s 兜住网络抖动；3 次覆盖
+# 多角度检索、又不至于无限检索。改完需真机测一遍（重启 dsh 才生效，patch 启动时加载）。
+#
+# ⚠️ patch 是「整段 config 替换」不是合并，必须把原键一起写全，否则会丢：
+#   - tool-web 的 fetch:false 是防 SSRF 的安全开关，绝不能丢（丢=回默认 true 开 web_fetch）；
+#   - web-search-deepseek 的 apiKeyEnv 是搜索请求的 key 引用，丢了才回默认（恰好同一值）。
+- id: tool-web
+  config:
+    fetch: false
+    searchTimeoutMs: 30000
+
+- id: web-search-deepseek
+  config:
+    apiKeyEnv: DEEPSEEK_API_KEY
+    maxUses: 3
+
+# ── 干活人设（pet.work_persona 开关，启动前由栗栗注入）────────────────
+# dsh 的 system prompt 里 persona 段默认空，栗栗从没填过 → 专业模式一直是
+# dsh 原生英文 agent 腔、没有栗栗人设（用户 2026-09-08 发现「跟 dsh 一样」）。
+# 这里放占位符 __YY_PERSONA__，启动 dsh 前 dsh_launcher 按 pet.work_persona：
+#   开 → 替换成「当前皮 + 当前语言」的栗栗人设（Persona.build_system_prompt）
+#   关 → 替换成空串（回到 dsh 原生腔，省 token）
+# persona 是 dsh 启动时加载的静态配置，所以切开关要重启栗栗才生效（跟换皮一致）。
+- id: system-prompt
+  config:
+    persona: "__YY_PERSONA__"
+
+# ── 干活人设 preset 指向（pet.work_persona 开关，启动前由栗栗注入 default）────
+# dsh 的 per-agent 人设由 preset 里 persona row（@deepseek-ai/dsh-persona）决定，
+# 会 shadow 全局 system-prompt 的 persona（上面那条）——所以光改全局 persona 没用，
+# 得走「自定义 preset」这个官方入口。栗栗把 standard 复制成 tamias 并注入人设
+# （见 dsh_launcher._sync_preset_persona），这里把默认 preset 指过去：
+#   开 → tamias（栗栗人设）
+#   关 → standard（dsh 原生腔，省 token）
+# preset 是 dsh 启动时 mount 的静态配置，所以切开关要重启栗栗才生效（跟上面一致）。
+- id: agent-presets
+  config:
+    default: "__YY_PRESET__"

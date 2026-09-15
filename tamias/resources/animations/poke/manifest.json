@@ -1,0 +1,9 @@
+{
+  "name": "poke",
+  "fps": 15,
+  "frames": 30,
+  "width": 319,
+  "height": 560,
+  "logical_scale": 2,
+  "source": "被戳一下.mov（Wan2.2 图生视频，ProRes 4444 带 alpha，480x832@15fps，2.0s）"
+}

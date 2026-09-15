@@ -1,0 +1,9 @@
+{
+  "name": "pinch_left",
+  "fps": 15,
+  "frames": 30,
+  "width": 299,
+  "height": 560,
+  "logical_scale": 2,
+  "source": "最终高清捏左脸.mov（Wan2.2 图生视频，ProRes 4444 带 alpha，960x1664@15fps）"
+}

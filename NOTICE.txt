@@ -1,0 +1,174 @@
+栗栗（Tamias）桌面智能助手 — 第三方字体授权声明
+=====================================================
+
+本软件界面使用以下第三方字体。所有字体均为免费可商用授权，
+并随本软件「原样」打包分发（未作任何修改）。
+
+1. HarmonyOS Sans SC（鸿蒙字体）
+   版权：Copyright 2021 Huawei Device Co., Ltd.
+   授权：HarmonyOS Sans Fonts License Agreement
+   用途：中文 / 英文界面
+   说明：字体文件原样打包、未作修改；本声明即为协议要求的「显著声明」。
+   协议全文：resources/fonts/HarmonyOS_Sans_LICENSE.txt
+
+2. Noto Sans JP（思源黑体 · 日文）
+   版权：© Adobe / Google
+   授权：SIL Open Font License 1.1
+   用途：日文界面
+   协议全文：resources/fonts/NotoSansJP_OFL.txt
+
+3. JetBrains Mono
+   版权：© JetBrains s.r.o.
+   授权：SIL Open Font License 1.1
+   用途：代码 / 日志 / 终端等宽显示
+   协议全文：resources/fonts/JetBrainsMono_OFL.txt
+
+上述字体的完整授权协议文本均随软件一同分发（见 resources/fonts/ 目录）。
+
+
+=====================================================
+运行时引擎与依赖（「干活」功能）
+=====================================================
+
+栗栗的「干活」功能内置以下第三方运行时与依赖，均「原样」打包分发
+（未作修改），并随本软件保留各自的版权声明与许可文本。
+
+4. Node.js（便携版运行时）
+   版本：v24.16.0
+   版权：Copyright Node.js contributors
+   授权：MIT License
+   用途：运行 dsh 干活引擎所需的 JavaScript 运行时
+   说明：Node 本体为 MIT；其二进制还内置 V8 / ICU / OpenSSL / zlib 等
+       组件，各组件许可见 Node 官方完整 LICENSE（nodejs.org）。
+   许可全文：runtime/node/LICENSE（随包，本声明为 MIT 核心条款）
+
+5. dsh（DeepSeek Harness，干活引擎）
+   版本：0.1.0-rc.6
+   版权：Copyright 2026 DeepSeek
+   授权：MIT License
+   用途：栗栗「干活」功能的后端执行引擎（含 dsh-base / dsh-web-app，
+        及内置 skill 机制 dsh-skill / dsh-skill-filesystem / dsh-tool-skill）
+   许可全文：runtime/dsh/LICENSE（随包）
+
+6. dsh 依赖树（node_modules，约 400 个包）
+   授权：MIT / ISC / Apache-2.0 / BSD-2-Clause / BSD-3-Clause / 0BSD /
+        Python-2.0（均为宽松许可，无 copyleft）
+   用途：dsh 引擎及其插件框架（cordis / schemastery 等）的运行时依赖
+   许可全文：runtime/dsh/node_modules/<包名>/LICENSE（随包，各包自带）
+
+7. 栗栗门禁插件（yy-approval-gate.mjs）
+   版权：Tamias Team（github.com/yuanqubeiding，自研，非第三方）
+   用途：「干活逐操作审批 + 改前回滚拍照」安全门禁
+   说明：基于 dsh 的 tools/pre-execute 与 fs/*-intent 扩展点自研实现。
+
+
+=====================================================
+Python 侧依赖（界面框架与网络库）
+=====================================================
+
+栗栗的界面与网络功能使用以下第三方 Python 库，均「原样」分发
+（动态链接，未修改、未加密、未校验完整性），并随本软件保留各自
+版权声明与许可文本。
+
+8. PySide6 / Qt（界面框架 + Live2D 立绘渲染）
+   版本：6.11.2（含 Qt 6.11 / QtWebEngine）
+   版权：Copyright (C) The Qt Company Ltd. 及 Qt Project 贡献者
+   授权：GNU Lesser General Public License v3（LGPL-3.0）
+   用途：桌面窗口 / 控件 / 透明桌宠 + QWebEngine 渲染 Live2D 立绘
+   说明：LGPL 允许闭源商用。栗栗满足 LGPLv3 第 4 条「组合作品」条件：
+       ① 未修改 Qt / PySide6 库本身；② 以 onedir 动态链接分发，且未加密、
+       未校验库完整性——用户可用自编译的 Qt / PySide6 替换本软件
+       自带的库；③ 本声明即为显著声明。注意：QtWebEngine 属 LGPLv3
+       （非 LGPLv2.1），含 Chromium 组件（BSD-3 等，随 Qt 官方声明）。
+       ⚠️ 未使用 GPL-3.0-only 模块：本软件仅链接 QtCore / QtGui / QtWidgets /
+       QtSvg / QtWebEngine 等 LGPL 模块，未引入 Qt Charts、Qt Data
+       Visualization 等 GPL-only 组件（打包产物不含 Qt6Charts.dll 等）。
+   源码获取：PySide6 → https://code.qt.io/cgit/pyside/pyside-setup.git
+             Qt     → https://code.qt.io/cgit/qt/qtbase.git
+   许可全文（随包分发，逐字官方文本）：
+             LGPLv3 → tamias/resources/licenses/LGPL-3.0.txt
+             GPLv3  → tamias/resources/licenses/GPL-3.0.txt
+             （LGPLv3 是 GPLv3 的补充许可，故两份一并随包）
+
+9. PyYAML（配置读写）
+   版本：6.x
+   版权：Copyright (c) 2017-2021 Ingy döt Net; Copyright (c) 2006-2016 Kirill Simonov
+   授权：MIT License
+   用途：读写 config.yaml 用户配置
+
+10. requests（调用 DeepSeek API）
+    版本：2.x
+    版权：Copyright Kenneth Reitz 及贡献者
+    授权：Apache License 2.0
+    用途：调用 DeepSeek 聊天 API（闲聊链路）
+
+11. websockets（dsh 事件流）
+    版本：16.0
+    版权：Copyright (c) Aymeric Augustin and contributors
+    授权：BSD-3-Clause License
+    用途：连接 dsh 干活引擎的 WebSocket 事件流（干活过程实时推送）
+    说明：可选依赖——缺它时干活 HTTP RPC 仍可用、仅事件流降级。BSD-3-Clause
+        允许商用，义务为保留版权声明与免责声明（随包全文见下方路径）。
+    许可全文：tamias/resources/licenses/websockets-BSD-3-Clause.txt（随包）
+
+12. winrt-Windows.Media.SpeechRecognition（PyWinRT，语音输入）
+    版本：3.2.1（含同版本的 winrt-Windows.Globalization /
+        winrt-Windows.Foundation / winrt-Windows.Foundation.Collections）
+    版权：Copyright (c) Microsoft Corporation；
+        Copyright (c) 2021-2022 David Lechner
+    授权：MIT License
+    用途：Windows 内置离线语音识别（「按住说话」转文字）
+    说明：MIT 许可，可商用、可闭源再分发。语音识别走 Windows 本地离线引擎，
+        音频不出本机、不存储、不上传；识别结果仅作为普通聊天文字发送，
+        与打字发送消耗完全一致，不产生额外费用。
+    许可全文：tamias/resources/licenses/PyWinRT-MIT.txt（随包）
+
+
+=====================================================
+界面图标（SVG）
+=====================================================
+
+13. Lucide（界面小图标）
+    版权：Copyright (c) 2026 Lucide Icons and Contributors
+    授权：ISC License（免费商用、无需署名）；其中部分图标源自 Feather 项目
+        （Copyright (c) 2013-present Cole Bemis，MIT License）
+    用途：界面按钮 / 菜单 / 功能卡片的小图标（单色线条风，替代原先的 emoji）
+    说明：图标以 SVG 原样打包分发、未作修改；运行时仅替换「描边颜色」以适配
+        深浅主题，不改变图形本身。
+    许可全文：tamias/resources/icons/lucide-LICENSE.txt（随包）
+
+
+=====================================================
+Live2D 立绘渲染（桌宠角色动画）
+=====================================================
+
+栗栗的桌宠立绘用 Live2D 技术渲染，内置以下第三方库，均「原样」随包分发。
+
+14. Live2D Cubism Core（立绘渲染内核）
+    版权：© 2019 Live2D Inc. All rights reserved.
+    授权：Live2D Proprietary Software License Agreement（专有许可，非开源）
+    用途：渲染栗栗桌宠的 .moc3 立绘模型（眨眼 / 嘴型 / 尾巴摆动 / 眼珠跟随）
+    说明：Cubism Core 属该协议的「Redistributable Code」，允许随软件再分发。
+        栗栗满足其再分发条件：① 未修改 Cubism Core 文件本身，文件头版权
+        声明「© 2019 Live2D Inc.」原样保留；② 协议全文随包分发（见下方
+        路径）；③ 作者为年销售额不足 1000 万日元的「Small-Scale Enterprise」
+        （协议第 1.22 / 2.2 条），据此豁免另行签订 Publication License
+        Agreement 及许可费——若年销售额超过 1000 万日元，须与 Live2D 另签
+        出版许可协议。协议以日文正本为准，随包英文为 Live2D 官方译文。
+    许可全文：tamias/resources/licenses/Live2D-Proprietary-License.txt（随包）
+
+15. pixi-live2d-display（Live2D Web 渲染层）
+    版本：0.4.0（cubism4 构建，对应 libs/cubism4.min.js）
+    版权：Copyright (c) guansss 及贡献者
+    授权：MIT License
+    用途：在 WebView 中加载并驱动 Live2D 模型、绑定交互事件
+    说明：MIT 许可，可商用；运行时依赖 Cubism Core（专有，见第 13 项）。
+    许可全文：https://opensource.org/licenses/MIT
+
+16. PixiJS（WebGL 渲染引擎）
+    版本：6.5.10（对应 libs/pixi.min.js）
+    版权：Copyright (c) PixiJS contributors
+    授权：MIT License
+    用途：Live2D 立绘的底层 WebGL 画布渲染
+    说明：MIT 许可，可商用。
+    许可全文：https://opensource.org/licenses/MIT

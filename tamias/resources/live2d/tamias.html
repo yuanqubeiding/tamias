@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>栗栗 Live2D</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: transparent; width: 100vw; height: 100vh; overflow: hidden; }
+        #live2dcanvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <canvas id="live2dcanvas" width="200" height="280"></canvas>
+
+    <!-- Live2D 依赖（已本地化，离线可用）：Cubism 内核 + pixi.js@6 + pixi-live2d-display@0.4.0 cubism4 版 -->
+    <!-- Live2D Cubism Core © 2019 Live2D Inc.，按 Live2D Proprietary Software License 使用（版权声明原样保留，见 NOTICE.txt 第 13 项） -->
+    <!-- pixi-live2d-display (MIT) + PixiJS v6.5.10 (MIT) -->
+    <script src="./libs/live2dcubismcore.min.js"></script>
+    <script src="./libs/pixi.min.js"></script>
+    <script src="./libs/cubism4.min.js"></script>
+
+    <script>
+    // ==================== 栗栗 Live2D 控制器 ====================
+    let app = null;
+    let model = null;
+    let _blinkTimer = null;
+    let _idleTimer = null;
+    let _talkTimer = null;
+
+    // 模型文件名（导出 .moc3 后，按实际 .model3.json 文件名改这里）
+    const MODEL_URL = './zhende5.0tamias.model3.json';
+
+    // 画布尺寸（和 PyQt 窗口 200x280 对齐）
+    const VIEW_W = 200, VIEW_H = 280;
+    // 模型缩放/位置（加载后按实际体型微调）
+    const SCALE = 0.25;
+    const POS_X = VIEW_W / 2;     // 水平居中
+    const POS_Y = VIEW_H - 8;     // 底部对齐
+
+    // 晃动幅度（鼠标 X 归一化 -1..1 后乘这个系数）
+    const SWAY_HAIR = 15;    // 后发+领带 ParamAngleZ，±15°
+    const SWAY_BODY = 5;     // 身体 ParamBodyAngleZ，±5°
+    const SWAY_SKIRT = 0.6;  // 裙子 Param，±0.6
+
+    async function initLive2D() {
+        try {
+            console.log('[栗栗] 开始加载 Live2D...');
+            app = new PIXI.Application({
+                view: document.getElementById('live2dcanvas'),
+                width: VIEW_W, height: VIEW_H,
+                transparent: true, backgroundAlpha: 0,
+                antialias: true,                                   // 抗锯齿，边缘更平滑
+                resolution: Math.max(2, window.devicePixelRatio || 1),  // 高分屏 2x 渲染，防糊
+                autoDensity: true,
+            });
+            model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
+            // 打印原始尺寸（未缩放时 width/height = 模型画布原始大小），用于排查「加载了但看不到」
+            console.log('[栗栗] 原始尺寸 width=' + model.width + ' height=' + model.height);
+            if (model.internalModel) {
+                console.log('[栗栗] internalModel width=' + model.internalModel.width + ' height=' + model.internalModel.height);
+            }
+            // 自适应：按高度填满（比按宽度更大），底部对齐 + 水平居中；左右超出就居中裁切
+            const nw = model.width, nh = model.height;
+            const s = VIEW_H / nh;              // 让高度正好 = 视口高，尽量放大
+            model.scale.set(s);
+            model.x = (VIEW_W - nw * s) / 2;    // 水平居中（负值 = 左右各裁一点）
+            model.y = 0;                         // nh*s = VIEW_H，顶部对齐
+            app.stage.addChild(model);
+            console.log('[栗栗] 缩放=' + s.toFixed(4) + ' 位置=(' + model.x.toFixed(1) + ',' + model.y.toFixed(1) + ')');
+
+            startBlink();   // 自动眨眼
+            startIdle();    // 摇尾巴待机
+            console.log('[栗栗] Live2D 就绪');
+            return true;
+        } catch (e) {
+            console.error('[栗栗] 初始化失败:', e);
+            return false;
+        }
+    }
+
+    function core() { return model ? model.internalModel.coreModel : null; }
+
+    // ---------- 自动眨眼（快一点） ----------
+    function startBlink(intervalMs = 2200) {
+        _blinkTimer = setInterval(doBlink, intervalMs);
+    }
+    function doBlink() {
+        const c = core();
+        if (!c) return;
+        c.setParameterValueById('ParamEyeLOpen', 0);
+        c.setParameterValueById('ParamEyeROpen', 0);
+        setTimeout(() => {
+            c.setParameterValueById('ParamEyeLOpen', 1);
+            c.setParameterValueById('ParamEyeROpen', 1);
+        }, 110);  // 闭眼约 110ms，够快
+    }
+
+    // ---------- 待机：摇尾巴 ----------
+    function startIdle() {
+        let t = 0;
+        _idleTimer = setInterval(() => {
+            const c = core();
+            if (!c) return;
+            t += 0.15;
+            c.setParameterValueById('ParamTail', Math.sin(t) * 12);  // 尾巴轻摆
+        }, 50);
+    }
+
+    // ---------- 鼠标跟随：眼珠 + 晃动随鼠标 ----------
+    function trackMouse(nx, ny) {
+        const c = core();
+        if (!c) return;
+        // 眼珠跟随
+        c.setParameterValueById('ParamEyeBallX', nx);
+        c.setParameterValueById('ParamEyeBallY', ny);
+        // 晃动随鼠标左右（nx）
+        c.setParameterValueById('ParamAngleZ', nx * SWAY_HAIR);      // 后发+领带
+        c.setParameterValueById('ParamBodyAngleZ', nx * SWAY_BODY);  // 身体
+        c.setParameterValueById('Param', nx * SWAY_SKIRT);           // 裙子
+    }
+
+    // ---------- 点击（惊喜） ----------
+    function onPoke() {
+        setExpression('surprise');
+        setTimeout(() => setExpression('neutral'), 1500);
+    }
+
+    // ---------- 说话（嘴型） ----------
+    function startTalking() {
+        const c = core();
+        if (!c) return;
+        _talkTimer = setInterval(() => {
+            c.setParameterValueById('ParamMouthOpenY', 0.3 + Math.random() * 0.7);
+        }, 100);
+    }
+    function stopTalking() {
+        if (_talkTimer) { clearInterval(_talkTimer); _talkTimer = null; }
+        const c = core();
+        if (c) c.setParameterValueById('ParamMouthOpenY', 0);
+    }
+
+    // ---------- 表情 ----------
+    function setExpression(expr) {
+        if (!model) return;
+        try { model.expression(expr); } catch (e) { console.log('[栗栗] 表情:', expr); }
+    }
+
+    // ============ 启动 ============
+    document.addEventListener('DOMContentLoaded', () => {
+        initLive2D().then(ok => {
+            if (ok && window.pyqtReady) window.pyqtReady();
+        });
+    });
+    </script>
+</body>
+</html>

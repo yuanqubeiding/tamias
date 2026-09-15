@@ -1,0 +1,9 @@
+{
+  "name": "exec_cmd_loop",
+  "fps": 15,
+  "frames": 30,
+  "width": 292,
+  "height": 560,
+  "logical_scale": 2,
+  "source": "循环执行命令.mov（Wan2.2 图生视频，ProRes 4444 带 alpha，960x1664@15fps，2.00s，执行命令时的循环通话动作，循环几次后停在末帧待机）"
+}

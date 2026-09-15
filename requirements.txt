@@ -1,0 +1,26 @@
+# ============================================================
+# 栗栗（Tamias）桌面智能助手 — Python 依赖
+# ============================================================
+
+# GUI 框架：桌面透明窗口 + UI 控件（PySide6 是 LGPL，闭源商用友好，替代 GPL 的 PyQt6）
+# PySide6 元包自带 QtWebEngine（Live2D 立绘渲染用），无需另装 PySide6-WebEngine
+PySide6>=6.5.0
+
+# YAML 配置文件读写
+PyYAML>=6.0
+
+# HTTP 请求（调用 DeepSeek API）
+requests>=2.28.0
+
+# WebSocket 客户端（dsh 干活引擎事件流，实时推送干活过程）
+websockets>=10.0
+
+# 语音输入：Windows 本地离线语音识别（按住说话转文字，零 token）
+# PyWinRT 各命名空间分包（MIT 许可，见 NOTICE.txt 第 16 项）
+winrt-Windows.Media.SpeechRecognition>=3.2.1
+winrt-Windows.Globalization>=3.2.1
+winrt-Windows.Foundation>=3.2.1
+winrt-Windows.Foundation.Collections>=3.2.1
+
+# 打包工具（开发阶段使用，不打包进最终 EXE）
+# pyinstaller>=6.0.0

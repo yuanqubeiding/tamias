@@ -1,0 +1,66 @@
+# ===== 敏感信息（绝不能进版本历史，进了就删不干净）=====
+# API key 所在地
+config.yaml
+.dsh/
+.harness/
+.npm-cache/
+.claude/
+
+# ===== 用户数据（对话历史，含真实信息）=====
+data/
+# 干活回滚快照：<工作目录>/.tamias/snapshots/（改前原文 + manifest 含绝对路径），
+# 默认工作目录是仓库根，必须挡掉，否则把用户文件内容/绝对路径提交进历史
+.tamias/
+
+# ===== 构建产物 =====
+dist/
+build_temp/
+installer/*
+!installer/setup.iss
+*.spec
+
+# ===== Python 缓存 =====
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ===== 大文件 / 安装包 =====
+*.exe
+*.zip
+*.7z
+
+# ===== dsh 干活引擎运行时（node.exe + dsh 包/依赖，构建机本地准备，330MB+ 不入库）=====
+# 门禁插件 + profile 配置的正本在 tamias/resources/dsh-profile/（进 git），
+# 这里只放二进制的 node 与 npm 依赖树，随构建机存在即可。
+runtime/
+
+# ===== 日志 =====
+*.log
+
+# ===== 测试残留 =====
+test_workspace/
+
+# ===== 开发临时脚本 / 中间产物（一次性脚本，不入库）=====
+# 防伪日志（内部文档，不入库/发布）
+_防伪日志.md
+_check_psd.py
+_composite_view.jpg
+_merge_hat_tail.py
+_rename_docs.py
+_rename_step2.py
+_rename_yy2lili.py
+# 开发/调试/测试脚本（一次性，不入库）
+_debug_run.py
+_extract_i18n_keys.py
+_keys.txt
+_probe_dsh.py
+_snapshot_selftest.py
+gate_smoke_test.py
+# Live2D 试错脚本目录（试验产物）
+_live2d_api/
+# 动画解帧临时目录（.rgba 原始帧 + process_*.py 一次性脚本 + 联系人表/诊断图，动辄 3GB+ 不入库）
+_tmp/
+
+# ===== VRM 测试模型（元数据含作者信息，且已弃用走 Live2D）=====
+tamias/resources/vrm/model/

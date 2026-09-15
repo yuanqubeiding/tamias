@@ -1,0 +1,9 @@
+{
+  "name": "hand_wait",
+  "fps": 15,
+  "frames": 52,
+  "width": 301,
+  "height": 560,
+  "logical_scale": 2,
+  "source": "真正高清循环.mov（Wan2.2 图生视频，ProRes 4444 带 alpha，960x1664@15fps，3.47s，审批长时间无回应时的循环等待动作）"
+}
