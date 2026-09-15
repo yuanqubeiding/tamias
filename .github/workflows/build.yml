@@ -2,7 +2,8 @@
 # 每次推送到 master（或手动触发）时，在 Windows 上：
 #   1) 现场准备 runtime（node v24.16.0 便携版 + dsh 干活引擎，均公开可下载）
 #   2) 跑 build.py，打出「界面 + 闲聊 + 干活」完整版 dist/tamias
-#   3) 产物作为 artifact 存档（不进 Release）。
+#   3) 用 Inno Setup 把 dist/tamias 编译成安装包 tamias_setup_v0.1.5.exe
+#   4) 安装包作为 artifact 存档（不进 Release）。
 #
 # runtime 构成（对齐 dsh_launcher.py 的定位规则）：
 #   runtime/node/node.exe   ← node 便携版
@@ -63,9 +64,18 @@ jobs:
       - name: 打包（build.py，spec 驱动 + GPL-only Qt 源头过滤）
         run: python build.py
 
-      - name: 上传构建产物（artifact，非 release）
+      - name: 编译安装包（Inno Setup）
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $langDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
+          New-Item -ItemType Directory -Path $langDir -Force | Out-Null
+          Copy-Item "installer\languages\ChineseSimplified.isl" -Destination $langDir -Force
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+
+      - name: 上传安装包（artifact，非 release）
         uses: actions/upload-artifact@v4
         with:
-          name: tamias-windows
-          path: dist/tamias/
+          name: tamias-setup
+          path: installer/*.exe
           if-no-files-found: error

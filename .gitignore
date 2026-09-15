@@ -17,6 +17,8 @@ dist/
 build_temp/
 installer/*
 !installer/setup.iss
+!installer/languages/
+!installer/languages/*.isl
 *.spec
 
 # ===== Python 缓存 =====
