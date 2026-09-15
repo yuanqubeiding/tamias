@@ -1,0 +1,195 @@
+栗栗 (Tamias) Desktop AI Assistant — Third-Party Font License Notice
+=====================================================================
+
+English translation for reference; the Chinese original (NOTICE.txt) prevails.
+
+This software's interface uses the following third-party fonts. All fonts are
+free for commercial use, and are distributed with this software "as-is"
+(unmodified).
+
+1. HarmonyOS Sans SC
+   Copyright: Copyright 2021 Huawei Device Co., Ltd.
+   License: HarmonyOS Sans Fonts License Agreement
+   Use: Chinese / English interface
+   Notes: Font files distributed as-is, unmodified; this notice serves as the
+          "prominent notice" required by the agreement.
+   Full text: resources/fonts/HarmonyOS_Sans_LICENSE.txt
+
+2. Noto Sans JP
+   Copyright: (c) Adobe / Google
+   License: SIL Open Font License 1.1
+   Use: Japanese interface
+   Full text: resources/fonts/NotoSansJP_OFL.txt
+
+3. JetBrains Mono
+   Copyright: (c) JetBrains s.r.o.
+   License: SIL Open Font License 1.1
+   Use: code / log / terminal monospace display
+   Full text: resources/fonts/JetBrainsMono_OFL.txt
+
+The complete license texts of the above fonts are distributed with the software
+(see resources/fonts/).
+
+
+=====================================================================
+Runtime engines & dependencies (the "work" feature)
+=====================================================================
+
+栗栗's "work" feature bundles the following third-party runtimes and
+dependencies, all distributed "as-is" (unmodified), with their respective
+copyright notices and license texts retained.
+
+4. Node.js (portable runtime)
+   Version: v24.16.0
+   Copyright: Copyright Node.js contributors
+   License: MIT License
+   Use: JavaScript runtime for running the dsh work engine
+   Notes: Node itself is MIT; its binary also embeds V8 / ICU / OpenSSL / zlib
+          etc., each under the licenses in Node's official LICENSE (nodejs.org).
+   Full text: runtime/node/LICENSE (bundled; this notice covers the MIT core terms)
+
+5. dsh (DeepSeek Harness, the work engine)
+   Version: 0.1.0-rc.6
+   Copyright: Copyright 2026 DeepSeek
+   License: MIT License
+   Use: backend execution engine for 栗栗's "work" feature (incl. dsh-base /
+        dsh-web-app, and the built-in skill mechanisms dsh-skill /
+        dsh-skill-filesystem / dsh-tool-skill)
+   Full text: runtime/dsh/LICENSE (bundled)
+
+6. dsh dependency tree (node_modules, ~400 packages)
+   License: MIT / ISC / Apache-2.0 / BSD-2-Clause / BSD-3-Clause / 0BSD /
+            Python-2.0 (all permissive, no copyleft)
+   Use: runtime dependencies of the dsh engine and its plugin framework
+        (cordis / schemastery, etc.)
+   Full text: runtime/dsh/node_modules/<package>/LICENSE (bundled, per package)
+
+7. 栗栗 Approval Gate plugin (yy-approval-gate.mjs)
+   Copyright: Tamias Team (github.com/yuanqubeiding, self-developed, not third-party)
+   Use: "per-operation approval + pre-change rollback snapshot" safety gate
+   Notes: self-developed on top of dsh's tools/pre-execute and fs/*-intent
+          extension points.
+
+
+=====================================================================
+Python-side dependencies (UI framework & network libraries)
+=====================================================================
+
+栗栗's UI and network features use the following third-party Python libraries,
+all distributed "as-is" (dynamically linked, unmodified, unencrypted,
+integrity-unchecked), with their respective copyright notices and license
+texts retained.
+
+8. PySide6 / Qt (UI framework + Live2D rendering)
+   Version: 6.11.2 (incl. Qt 6.11 / QtWebEngine)
+   Copyright: Copyright (C) The Qt Company Ltd. and Qt Project contributors
+   License: GNU Lesser General Public License v3 (LGPL-3.0)
+   Use: desktop window / widgets / transparent pet + QWebEngine rendering of the Live2D model
+   Notes: LGPL permits closed-source commercial use. 栗栗 satisfies LGPLv3 §4
+          "Combined Works" conditions: (1) Qt / PySide6 libraries are unmodified;
+          (2) distributed as onedir with dynamic linking, unencrypted and without
+          integrity checks — users may replace the bundled libraries with their
+          own builds; (3) this notice serves as the prominent notice. Note:
+          QtWebEngine is LGPLv3 (not LGPLv2.1), containing Chromium components
+          (BSD-3 etc., per Qt's official notice).
+          WARNING: no GPL-3.0-only modules are used — this software links only
+          LGPL modules (QtCore / QtGui / QtWidgets / QtSvg / QtWebEngine) and
+          does not include GPL-only components such as Qt Charts or Qt Data
+          Visualization (the build artifacts contain no Qt6Charts.dll etc.).
+   Source: PySide6 → https://code.qt.io/cgit/pyside/pyside-setup.git
+           Qt     → https://code.qt.io/cgit/qt/qtbase.git
+   Full text (bundled, verbatim official):
+           LGPLv3 → tamias/resources/licenses/LGPL-3.0.txt
+           GPLv3  → tamias/resources/licenses/GPL-3.0.txt
+           (LGPLv3 is a supplementary license to GPLv3, so both are bundled)
+
+9. PyYAML (config read/write)
+   Version: 6.x
+   Copyright: Copyright (c) 2017-2021 Ingy döt Net; Copyright (c) 2006-2016 Kirill Simonov
+   License: MIT License
+   Use: reading/writing config.yaml user configuration
+
+10. requests (calling the DeepSeek API)
+    Version: 2.x
+    Copyright: Copyright Kenneth Reitz and contributors
+    License: Apache License 2.0
+    Use: calling the DeepSeek chat API (chat channel)
+
+11. websockets (dsh event stream)
+    Version: 16.0
+    Copyright: Copyright (c) Aymeric Augustin and contributors
+    License: BSD-3-Clause License
+    Use: connecting to the dsh work engine's WebSocket event stream
+    Notes: optional — without it the work HTTP RPC still works, only the event
+           stream degrades. BSD-3-Clause permits commercial use; obligations are
+           retaining the copyright notice and disclaimer.
+    Full text: tamias/resources/licenses/websockets-BSD-3-Clause.txt (bundled)
+
+12. winrt-Windows.Media.SpeechRecognition (PyWinRT, voice input)
+    Version: 3.2.1 (incl. same-version winrt-Windows.Globalization /
+        winrt-Windows.Foundation / winrt-Windows.Foundation.Collections)
+    Copyright: Copyright (c) Microsoft Corporation;
+        Copyright (c) 2021-2022 David Lechner
+    License: MIT License
+    Use: Windows built-in offline speech recognition ("hold to talk")
+    Notes: MIT, commercial and closed-source redistribution allowed. Speech
+           recognition uses the Windows local offline engine — audio never
+           leaves the machine, is not stored or uploaded; recognition results
+           are sent only as ordinary chat text, identical in cost to typed input.
+    Full text: tamias/resources/licenses/PyWinRT-MIT.txt (bundled)
+
+
+=====================================================================
+UI icons (SVG)
+=====================================================================
+
+13. Lucide (UI icons)
+    Copyright: Copyright (c) 2026 Lucide Icons and Contributors
+    License: ISC License (free commercial use, no attribution required); some
+        icons derive from Feather (Copyright (c) 2013-present Cole Bemis, MIT)
+    Use: small icons for buttons / menus / feature cards (monoline, replacing emoji)
+    Notes: icons distributed as SVG as-is, unmodified; at runtime only the stroke
+           color is replaced to fit light/dark themes, the shape is unchanged.
+    Full text: tamias/resources/icons/lucide-LICENSE.txt (bundled)
+
+
+=====================================================================
+Live2D illustration rendering (desktop-pet character animation)
+=====================================================================
+
+栗栗's desktop-pet model is rendered with Live2D technology, bundling the
+following third-party libraries, all distributed "as-is".
+
+14. Live2D Cubism Core (rendering kernel)
+    Copyright: (c) 2019 Live2D Inc. All rights reserved.
+    License: Live2D Proprietary Software License Agreement (proprietary, not open source)
+    Use: rendering 栗栗's .moc3 model (blinking / mouth / tail sway / eye tracking)
+    Notes: Cubism Core is "Redistributable Code" under that agreement, allowed
+           to be redistributed with software. 栗栗 satisfies the redistribution
+           conditions: (1) Cubism Core files are unmodified, the file-header
+           copyright "(c) 2019 Live2D Inc." is retained; (2) the full agreement
+           is distributed with the software (see path below); (3) the author is a
+           "Small-Scale Enterprise" with annual sales under 10 million yen
+           (agreement §1.22 / §2.2), thus exempt from a separate Publication
+           License Agreement and fees — if annual sales exceed 10 million yen,
+           a separate publication license must be signed with Live2D. The
+           Japanese original prevails; the bundled English text is Live2D's
+           official translation.
+    Full text: tamias/resources/licenses/Live2D-Proprietary-License.txt (bundled)
+
+15. pixi-live2d-display (Live2D web rendering layer)
+    Version: 0.4.0 (cubism4 build, corresponding to libs/cubism4.min.js)
+    Copyright: Copyright (c) guansss and contributors
+    License: MIT License
+    Use: loading and driving the Live2D model in the WebView, binding interaction events
+    Notes: MIT, commercial use allowed; at runtime depends on Cubism Core
+           (proprietary, see item 14).
+    Full text: https://opensource.org/licenses/MIT
+
+16. PixiJS (WebGL rendering engine)
+    Version: 6.5.10 (corresponding to libs/pixi.min.js)
+    Copyright: Copyright (c) PixiJS contributors
+    License: MIT License
+    Use: low-level WebGL canvas rendering for the Live2D model
+    Notes: MIT, commercial use allowed.
+    Full text: https://opensource.org/licenses/MIT
