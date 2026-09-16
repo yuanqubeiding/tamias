@@ -1,4 +1,4 @@
-# 栗栗（Tamias）— 松鼠侦探管家桌宠
+# 栗栗（Tamias）— 松鼠侦探 · AI Agent 桌宠
 
 > [English](README.md)
 
@@ -14,7 +14,8 @@
 > 可能存在功能缺陷、稳定性或兼容性问题，请勿用于关键/生产场景。
 > 如有重大问题，欢迎通过 [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues) 指正反馈。
 
-> Windows 桌面宠物形态的「AI 管家」：能陪你聊天、帮你干活，办事先过门禁、改坏了能一键回滚。
+> Windows 桌宠形态的「AI Agent」——你的桌面 AI 管家：能陪你聊天，也能替你干活（读文件、写代码、改文件），
+> 但每个动作都要先过你的审批，改坏了能一键回滚。
 > 栗栗是只穿格纹风衣、戴猎鹿帽的松鼠侦探，气质「清澈大学生」。
 
 ## 栗栗能做什么
@@ -30,6 +31,10 @@
 - **顺手小工具**：查天气、番茄钟、随机决定、单位换算、定时提醒
 - **语音输入**：按住说话转文字，走 Windows 本地离线识别，音频不上传
 - **精灵动画**：栗栗会打哈欠、被戳、看书、思考等 19 组动态小动作，还有随互动起伏的「精神值」
+
+<p align="center">
+  <img src="docs/tamias-reading.png" alt="栗栗看书" height="200"> <img src="docs/tamias-poke.png" alt="栗栗被捏脸" height="200">
+</p>
 
 ### 动起来看看
 
@@ -86,3 +91,7 @@ PixiJS（MIT）、Lucide 图标（ISC）等。
 
 - GitHub：github.com/yuanqubeiding
 - 反馈：GitHub Issues
+
+---
+
+**关键词 / Keywords**：AI 桌宠 · AI Agent · 桌面 AI 管家 · 桌面宠物 · 虚拟桌宠 · AI 聊天机器人 · DeepSeek · 开源 · AI Desktop Pet · Desktop Pet · AI Butler · AI Chatbot · Virtual Pet · Windows · Open Source

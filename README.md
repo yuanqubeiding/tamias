@@ -1,4 +1,4 @@
-# 栗栗 (Tamias) — Squirrel Detective Butler Desktop Pet
+# 栗栗 (Tamias) — Squirrel Detective · AI Agent Desktop Pet
 
 > [中文版](README.zh.md)
 
@@ -15,8 +15,9 @@
 > or compatibility issues — do not use it in critical/production scenarios.
 > If you find significant problems, please report them via [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues).
 
-> A Windows desktop-pet "AI butler": chats with you, does real work for you,
-> every action passes an approval gate first, and mistakes can be rolled back with one click.
+> An AI Agent desktop pet — your desktop AI butler for Windows: chats with you and does real work for you
+> (reads files, writes code, edits files), with every action passing your approval first, and mistakes
+> rollable back in one click.
 > 栗栗 is a squirrel detective in a plaid trench coat and deerstalker hat, with the
 > temperament of a "clear-eyed college student".
 
@@ -33,6 +34,10 @@
 - **Handy tools**: weather, Pomodoro timer, random decision, unit conversion, timed reminders
 - **Voice input**: hold-to-talk speech-to-text via Windows local offline recognition; audio is never uploaded
 - **Sprite animations**: 19 groups of animated reactions (yawn, poke, reading, thinking, …) plus a "spirit value" that fluctuates with interaction
+
+<p align="center">
+  <img src="docs/tamias-reading.png" alt="栗栗 reading" height="200"> <img src="docs/tamias-poke.png" alt="栗栗 being poked" height="200">
+</p>
 
 ### See it in action
 
@@ -89,3 +94,7 @@ Thanks to the teams behind these tools for saving us from many design pitfalls.
 
 - GitHub: github.com/yuanqubeiding
 - Feedback: GitHub Issues
+
+---
+
+**Keywords**: AI desktop pet · AI Agent · desktop AI butler · desktop pet · virtual pet · chatbot · DeepSeek · open source · Windows
