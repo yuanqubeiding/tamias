@@ -29,14 +29,33 @@ _instance_lock = None  # 单实例锁（重启前需正确释放，否则新进�
 
 
 def release_instance_lock():
-    """释放单实例锁。必须用 QLockFile.unlock()（关闭文件句柄 + 删锁文件）；
-    os.remove 删不掉被独占打开的锁文件（Windows 上文件被占用）。"""
+    """释放单实例锁，供重启前调用。
+
+    只用 QLockFile.unlock() 不够：它在 Windows 上删锁文件可能静默失败（句柄释放
+    有延迟、QFile::remove 失败不抛异常），锁文件残留会让新进程 tryLock 时误判
+    「已在运行」而退出（重启失败 bug）。所以 unlock() 关闭句柄后，再显式
+    os.remove 兜底删除 + 重试，确保锁文件真的没了。"""
     global _instance_lock
     if _instance_lock is not None:
         try:
-            _instance_lock.unlock()
+            _instance_lock.unlock()  # 先关句柄 + 尝试删文件
         except Exception:
             pass
+    # 兜底删除：unlock() 之后句柄已关，此时 os.remove 才能删掉（unlock 前文件被
+    # 独占打开删不掉）。重试：Windows 上句柄释放到文件可删有极小延迟。
+    import tempfile
+    _lock_path = os.path.join(tempfile.gettempdir(), "tamias", "instance.lock")
+    for _ in range(20):
+        try:
+            if os.path.exists(_lock_path):
+                os.remove(_lock_path)
+        except OSError:
+            time.sleep(0.05)
+            continue
+        if not os.path.exists(_lock_path):
+            return  # 删干净了，正常返回
+    # 重试约 1 秒仍删不掉 → 锁残留，新进程可能误判「已在运行」（记 error 便于定位）
+    log("[重启] 单实例锁文件 os.remove 重试 20 次仍删除失败", "error")
 
 
 def main():
@@ -77,6 +96,11 @@ def main():
     _lock_dir = _os.path.join(tempfile.gettempdir(), "tamias")
     _os.makedirs(_lock_dir, exist_ok=True)
     _instance_lock = QLockFile(_os.path.join(_lock_dir, "instance.lock"))
+    # 关键：QLockFile 默认 staleLockTime=30 秒。若旧进程 unlock 删锁失败导致锁文件
+    # 残留，新进程 tryLock 读到「旧进程 PID 已死」，但锁文件年龄 < 30 秒会判定
+    # 「锁仍有效」→ 误判「已在运行」退出（重启失败 bug，快速重启时必现）。
+    # 把 stale 时间设短，让「旧进程已死」的残留锁能快速判定 stale 清理，不再等 30 秒。
+    _instance_lock.setStaleLockTime(1000)  # 1 秒
     # 启动早期记一条「重启追踪」日志：重启失败时，对照旧进程的 [重启] 日志 + 这里的
     # tryLock 结果，即可判断是「新进程根本没起来」还是「起来后被锁拦住误判已在运行」。
     log(f"[启动] 单实例检测 frozen={getattr(sys, 'frozen', False)} argv={mask_path(' '.join(sys.argv))}")
