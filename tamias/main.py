@@ -6,9 +6,12 @@
 # ============================================================
 
 import os
-# 虚拟机/无独立 GPU 环境下 QWebEngine 硬件加速会白屏：禁用 GPU 回退软件渲染。
+# 虚拟机等无独立 GPU 环境下，QWebEngine 会把虚拟显卡列入 GPU 黑名单并禁用 WebGL，
+# 导致 Live2D 立绘白屏（Live2D 靠 WebGL 渲染）。这里忽略黑名单 + 强制启用 WebGL，
+# 让虚拟显卡尝试硬件渲染。之前的 --disable-gpu 方向反了：禁 GPU 后 WebGL 需要
+# SwiftShader 软件渲染，而 QtWebEngine 6 的 SwiftShader 已弃用，反而必白屏。
 # 必须在任何 Qt / PySide6 模块 import 之前设置，否则不生效。
-os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--ignore-gpu-blacklist --enable-webgl"
 import sys
 import signal
 import time
@@ -20,6 +23,20 @@ from tamias.i18n import tr, current_language
 from tamias.snapshot_store import SnapshotStore
 from tamias.app_log import log, log_gate, log_chat, crash_log_path, mask_path, log_exception
 from tamias import dsh_launcher, memory_store
+
+
+_instance_lock = None  # 单实例锁（重启前需正确释放，否则新进程误判「已经在运行」）
+
+
+def release_instance_lock():
+    """释放单实例锁。必须用 QLockFile.unlock()（关闭文件句柄 + 删锁文件）；
+    os.remove 删不掉被独占打开的锁文件（Windows 上文件被占用）。"""
+    global _instance_lock
+    if _instance_lock is not None:
+        try:
+            _instance_lock.unlock()
+        except Exception:
+            pass
 
 
 def main():
@@ -56,15 +73,17 @@ def main():
     # 不依赖任何外部命令，也不依赖进程名（开发态 python.exe 一样能锁住）。
     import tempfile, os as _os
     from PySide6.QtCore import QLockFile
+    global _instance_lock
     _lock_dir = _os.path.join(tempfile.gettempdir(), "tamias")
     _os.makedirs(_lock_dir, exist_ok=True)
-    _lock = QLockFile(_os.path.join(_lock_dir, "instance.lock"))
-    if not _lock.tryLock(100):
+    _instance_lock = QLockFile(_os.path.join(_lock_dir, "instance.lock"))
+    if not _instance_lock.tryLock(100):
         from PySide6.QtWidgets import QMessageBox
         QMessageBox.information(None, tr("栗栗"),
             tr("栗栗已经在运行啦！\n请查看桌面右下角或系统托盘～"))
         sys.exit(0)
-    # _lock 是 main() 局部变量，随事件循环跑完、进程退出才析构 → 自动解锁删锁文件
+    # _instance_lock 存模块级全局，供重启前 release_instance_lock() 释放；
+    # 正常退出时随事件循环结束析构，自动解锁删锁文件。
 
     signal.signal(signal.SIGINT, lambda *args: app.quit())
 
@@ -79,6 +98,13 @@ def main():
     # ---------- 启动日志：记版本 + 界面语言，出问题能还原「当时环境」 ----------
     from tamias import __version__
     log(f"栗栗启动 v{__version__}，界面语言 {settings.language}")
+
+    # ---------- 浏览器弹出追踪（诊断用，定位后删） ----------
+    # 启动早期就起一个后台进程创建监视器，覆盖「启动 → dsh 拉起 → 浏览器弹出」全程。
+    # 复现「启动就弹 dsh 网页」后，读 logs/browser_watch.log 看浏览器进程的父进程
+    # PID 是谁，即可锁定真凶（详见 browser_watch.py 模块头注释）。
+    from tamias.browser_watch import start_browser_watch
+    start_browser_watch()
 
     # ---------- 加载界面字体（中英鸿蒙 / 日文思源黑体 JP / 等宽 JetBrains Mono） ----------
     # 注册打包字体 + 按界面语言设全局默认字体；必须在创建任何控件之前调用。

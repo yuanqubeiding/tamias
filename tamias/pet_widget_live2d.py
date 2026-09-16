@@ -12,6 +12,8 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 import os
 
+from tamias.app_log import log
+
 
 WIDGET_WIDTH = 200
 WIDGET_HEIGHT = 280
@@ -24,6 +26,12 @@ class _ConsolePage(QWebEnginePage):
         # Windows 控制台默认 GBK，遇到 emoji 会 UnicodeEncodeError，先转安全再打印
         safe = str(message).encode("gbk", "replace").decode("gbk")
         print(f"[栗栗 JS] {safe}")
+        # 落盘：打包后 print 丢失，JS 报错（含 WebGL 检测结果）写进 run.log 才能诊断白屏
+        try:
+            _lvl = {0: "info", 1: "warning", 2: "error"}.get(int(level), "info")
+        except Exception:
+            _lvl = "info"
+        log(f"[Live2D JS] {safe}", _lvl)
 
 
 class Live2DPetWidget(QWidget):
@@ -64,8 +72,7 @@ class Live2DPetWidget(QWidget):
             os.path.dirname(__file__), "resources", "live2d", "tamias.html"
         )
         print(f"[栗栗] Live2D HTML: {html_path}")
-        self._webview.page().loadFinished.connect(
-            lambda ok: print(f"[栗栗] 页面加载{'成功' if ok else '失败'}"))
+        self._webview.page().loadFinished.connect(self._on_load_finished)
         self._webview.load(QUrl.fromLocalFile(os.path.abspath(html_path)))
 
         layout.addWidget(self._webview)
@@ -83,6 +90,40 @@ class Live2DPetWidget(QWidget):
         self._mouse_timer.timeout.connect(self._poll_mouse)
         self._mouse_timer.start(50)
 
+    def _on_load_finished(self, ok):
+        """页面加载完成：写日志 + 检测 WebGL（诊断白屏用）。"""
+        print(f"[栗栗] 页面加载{'成功' if ok else '失败'}")
+        log(f"Live2D 页面加载{'成功' if ok else '失败'}")
+        if ok:
+            self._log_webgl_diagnosis()
+
+    def _log_webgl_diagnosis(self):
+        """在页面上下文里检测 WebGL 可用性 + 渲染器名，结果写日志。
+
+        用于定位 VM 白屏根因：WebGL 不可用 → 必白屏；渲染器名含 SwiftShader/
+        llvmpipe/software 等 → VM 无 3D 加速，硬件路径白屏。"""
+        js = (
+            "(function(){try{var c=document.createElement('canvas');"
+            "var gl=c.getContext('webgl2')||c.getContext('webgl')||c.getContext('experimental-webgl');"
+            "if(!gl)return 'NO_WEBGL';"
+            "var e=gl.getExtension('WEBGL_debug_renderer_info');"
+            "var r=e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):'unknown';"
+            "return 'OK renderer='+r;}catch(err){return 'ERR '+err;}})()"
+        )
+        self._webview.page().runJavaScript(js, self._on_webgl_diagnosed)
+
+    def _on_webgl_diagnosed(self, result):
+        if result is None:
+            log("Live2D WebGL 检测：无返回（页面可能未跑起来）", "warning")
+        elif result == "NO_WEBGL":
+            log("Live2D WebGL 检测：WebGL 不可用（getContext 返回 null）→ Live2D 必白屏", "warning")
+        elif str(result).startswith("ERR "):
+            log(f"Live2D WebGL 检测异常：{result}", "warning")
+        else:
+            soft = any(k in str(result).lower() for k in ("swiftshader", "llvmpipe", "software", "mesa", "basic render"))
+            log(f"Live2D WebGL 检测：{result}"
+                + ("（疑似软件渲染，VM 无 3D 加速）" if soft else "（硬件渲染）"))
+
     def _check_ready(self):
         """轮询检查 WebEngine 是否加载完成"""
         if self._ready:
@@ -97,6 +138,7 @@ class Live2DPetWidget(QWidget):
             self._ready = True
             self._init_timer.stop()
             print("[栗栗] Live2D 模型就绪")
+            log("Live2D 模型就绪（model 已加载）")
 
     def _poll_mouse(self):
         """把全局鼠标位置归一化到 -1..1，驱动眼珠 + 晃动随鼠标。"""

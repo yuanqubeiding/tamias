@@ -45,6 +45,21 @@
     async function initLive2D() {
         try {
             console.log('[栗栗] 开始加载 Live2D...');
+            // ---- WebGL 检测（诊断白屏用）：可用性 + 渲染器名打到 console，Python 侧转写日志 ----
+            try {
+                const _tc = document.createElement('canvas');
+                const _gl = _tc.getContext('webgl2') || _tc.getContext('webgl') || _tc.getContext('experimental-webgl');
+                if (!_gl) {
+                    console.warn('[栗栗] WebGL 不可用：getContext 返回 null（Live2D 靠 WebGL 渲染，必白屏）');
+                } else {
+                    let _r = 'unknown';
+                    const _ext = _gl.getExtension('WEBGL_debug_renderer_info');
+                    if (_ext) { _r = _gl.getParameter(_ext.UNMASKED_RENDERER_WEBGL) || 'unknown'; }
+                    console.log('[栗栗] WebGL 可用，渲染器=' + _r + '（含 SwiftShader/llvmpipe = 软件渲染，VM 无 3D 加速）');
+                }
+            } catch (_we) {
+                console.warn('[栗栗] WebGL 检测异常: ' + _we);
+            }
             app = new PIXI.Application({
                 view: document.getElementById('live2dcanvas'),
                 width: VIEW_W, height: VIEW_H,

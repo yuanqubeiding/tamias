@@ -800,19 +800,24 @@ class PetWindow(QMainWindow):
 
     def restart_app(self):
         """重启栗栗（公共方法，桌宠设置 + 托盘共用）：
-        清实例锁 → 拉起新进程 → 旧进程立即退出。
-        未打包阶段直接 python -m 重启，打包后再改成 exe 路径。"""
-        import os, sys, subprocess, tempfile
+        释放单实例锁 → 拉起新进程 → 旧进程立即退出。
+        打包后 sys.executable 是 tamias.exe，直接拉起；开发态用 python -m。"""
+        import os, sys, subprocess
         project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        # 先清锁，否则新进程会误判「栗栗已经在运行」而退出
-        lock = os.path.join(tempfile.gettempdir(), 'tamias', 'instance.lock')
+        # 先正确释放单实例锁：必须用 QLockFile.unlock()（关闭句柄 + 删文件）；
+        # os.remove 删不掉被独占打开的锁文件，会导致新进程误判「已经在运行」。
         try:
-            if os.path.exists(lock):
-                os.remove(lock)
+            from tamias.main import release_instance_lock
+            release_instance_lock()
         except Exception:
             pass
+        # 打包后 sys.executable 就是 tamias.exe，直接拉起；开发态才用 python -m
+        if getattr(sys, 'frozen', False):
+            cmd = [sys.executable]
+        else:
+            cmd = [sys.executable, '-m', 'tamias.main']
         subprocess.Popen(
-            [sys.executable, '-m', 'tamias.main'],
+            cmd,
             cwd=project_dir,
             creationflags=0x08000000 if sys.platform == 'win32' else 0,
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
