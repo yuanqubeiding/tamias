@@ -2,6 +2,14 @@
 
 > [中文版](README.zh.md)
 
+<p align="center">
+  <img src="docs/tamias-cover.png" alt="Tamias chibi cover" width="640">
+</p>
+
+<p align="center">
+  <img src="docs/tamias-portrait.png" alt="Tamias portrait" width="300">
+</p>
+
 > ⚠️ **Current status: MVP (early stage), not yet 1.0**: due to time and resource constraints,
 > this product has **not been thoroughly tested** and may contain functional defects, stability,
 > or compatibility issues — do not use it in critical/production scenarios.
@@ -14,6 +22,10 @@
 
 ## What 栗栗 can do
 
+<p align="center">
+  <img src="docs/tamias-screenshot.png" alt="Tamias on the desktop" width="480">
+</p>
+
 - **Casual chat**: powered by the DeepSeek API (streaming replies, memory, four languages)
 - **Real work**: let 栗栗 read files, search, write code, edit files (via the dsh engine, step-by-step visualized)
 - **Approval gate**: every system action requires your approval; tool names are translated into plain language, raw commands are collapsible
@@ -21,6 +33,20 @@
 - **Handy tools**: weather, Pomodoro timer, random decision, unit conversion, timed reminders
 - **Voice input**: hold-to-talk speech-to-text via Windows local offline recognition; audio is never uploaded
 - **Sprite animations**: 19 groups of animated reactions (yawn, poke, reading, thinking, …) plus a "spirit value" that fluctuates with interaction
+
+### See it in action
+
+**Real work** — 栗栗 writes a Snake game:
+
+<p align="center"><img src="docs/tamias-work.gif" alt="栗栗 writing Snake" width="480"></p>
+
+**Approval gate** — every system action needs your OK:
+
+<p align="center"><img src="docs/tamias-approval.gif" alt="Approval gate" width="480"></p>
+
+**Being cute** — poke and pet it:
+
+<p align="center"><img src="docs/tamias-interact.gif" alt="栗栗 interaction" width="480"></p>
 
 ## Tech stack
 

@@ -2,6 +2,14 @@
 
 > [English](README.md)
 
+<p align="center">
+  <img src="docs/tamias-cover.png" alt="栗栗 Q 版封面" width="640">
+</p>
+
+<p align="center">
+  <img src="docs/tamias-portrait.png" alt="栗栗立绘" width="300">
+</p>
+
 > ⚠️ **当前为 MVP（早期）版本，尚未到 1.0**：因时间与资源等各种因素，本产品**未经充分测试**，
 > 可能存在功能缺陷、稳定性或兼容性问题，请勿用于关键/生产场景。
 > 如有重大问题，欢迎通过 [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues) 指正反馈。
@@ -11,6 +19,10 @@
 
 ## 栗栗能做什么
 
+<p align="center">
+  <img src="docs/tamias-screenshot.png" alt="栗栗在桌面上" width="480">
+</p>
+
 - **日常闲聊**：调用 DeepSeek API，和栗栗聊天（流式回复、记忆、四语言）
 - **专业干活**：让栗栗读文件、搜索、写代码、改文件（走 dsh 引擎，过程逐步可视化）
 - **门禁保护**：每个系统操作都要经你审批，工具名翻译成人话、具体命令可折叠查看
@@ -18,6 +30,20 @@
 - **顺手小工具**：查天气、番茄钟、随机决定、单位换算、定时提醒
 - **语音输入**：按住说话转文字，走 Windows 本地离线识别，音频不上传
 - **精灵动画**：栗栗会打哈欠、被戳、看书、思考等 19 组动态小动作，还有随互动起伏的「精神值」
+
+### 动起来看看
+
+**真干活** —— 让栗栗写个贪吃蛇：
+
+<p align="center"><img src="docs/tamias-work.gif" alt="栗栗写贪吃蛇" width="480"></p>
+
+**门禁审批** —— 每个系统操作都要你点头：
+
+<p align="center"><img src="docs/tamias-approval.gif" alt="门禁审批" width="480"></p>
+
+**会卖萌** —— 戳一戳、摸摸头：
+
+<p align="center"><img src="docs/tamias-interact.gif" alt="栗栗互动" width="480"></p>
 
 ## 技术栈
 
