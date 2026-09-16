@@ -77,11 +77,16 @@ def main():
     _lock_dir = _os.path.join(tempfile.gettempdir(), "tamias")
     _os.makedirs(_lock_dir, exist_ok=True)
     _instance_lock = QLockFile(_os.path.join(_lock_dir, "instance.lock"))
+    # 启动早期记一条「重启追踪」日志：重启失败时，对照旧进程的 [重启] 日志 + 这里的
+    # tryLock 结果，即可判断是「新进程根本没起来」还是「起来后被锁拦住误判已在运行」。
+    log(f"[启动] 单实例检测 frozen={getattr(sys, 'frozen', False)} argv={mask_path(' '.join(sys.argv))}")
     if not _instance_lock.tryLock(100):
+        log("[启动] 单实例锁 tryLock 失败（锁被占用）→ 判定「已在运行」→ 退出（重启失败即此症状）", "warning")
         from PySide6.QtWidgets import QMessageBox
         QMessageBox.information(None, tr("栗栗"),
             tr("栗栗已经在运行啦！\n请查看桌面右下角或系统托盘～"))
         sys.exit(0)
+    log("[启动] 单实例锁 tryLock 成功")
     # _instance_lock 存模块级全局，供重启前 release_instance_lock() 释放；
     # 正常退出时随事件循环结束析构，自动解锁删锁文件。
 

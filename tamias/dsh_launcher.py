@@ -486,7 +486,10 @@ def start_dsh(settings) -> Optional[str]:
         dsh_log = subprocess.DEVNULL  # dsh home 打不开就退回吞掉，不影响拉起
     try:
         _dsh_process = subprocess.Popen(
-            [str(node_exe), str(bin_js), "web", "--port", str(port)],
+            # --no-open：dsh web 模式默认会自动打开默认浏览器（弹 127.0.0.1:3080 网页，
+            # 见 dsh.log 的 "opening the default browser; pass --no-open to disable"）。
+            # 栗栗是内嵌桌宠，不需要浏览器页面，加 --no-open 关掉自动弹窗。
+            [str(node_exe), str(bin_js), "web", "--port", str(port), "--no-open"],
             env=env,
             creationflags=creationflags,
             stdout=dsh_log,

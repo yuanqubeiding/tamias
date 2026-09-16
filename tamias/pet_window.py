@@ -803,25 +803,34 @@ class PetWindow(QMainWindow):
         释放单实例锁 → 拉起新进程 → 旧进程立即退出。
         打包后 sys.executable 是 tamias.exe，直接拉起；开发态用 python -m。"""
         import os, sys, subprocess
+        from tamias.app_log import log, mask_path
         project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # 先正确释放单实例锁：必须用 QLockFile.unlock()（关闭句柄 + 删文件）；
         # os.remove 删不掉被独占打开的锁文件，会导致新进程误判「已经在运行」。
+        # 记日志：重启失败的头号嫌疑就是「锁没释放干净 → 新进程被单实例检测拦住」，
+        # 这里把释放结果 + 拉起结果都落盘，跟新进程的 [启动] 日志对照定位。
         try:
             from tamias.main import release_instance_lock
             release_instance_lock()
-        except Exception:
-            pass
+            log("[重启] 单实例锁已释放")
+        except Exception as e:
+            log(f"[重启] 释放单实例锁失败：{e}", "error")
         # 打包后 sys.executable 就是 tamias.exe，直接拉起；开发态才用 python -m
         if getattr(sys, 'frozen', False):
             cmd = [sys.executable]
         else:
             cmd = [sys.executable, '-m', 'tamias.main']
-        subprocess.Popen(
-            cmd,
-            cwd=project_dir,
-            creationflags=0x08000000 if sys.platform == 'win32' else 0,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        )
+        log(f"[重启] 准备拉起新进程 frozen={getattr(sys, 'frozen', False)} cmd={mask_path(' '.join(cmd))}")
+        try:
+            p = subprocess.Popen(
+                cmd,
+                cwd=project_dir,
+                creationflags=0x08000000 if sys.platform == 'win32' else 0,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            log(f"[重启] 新进程已拉起 PID={p.pid}，旧进程即将退出")
+        except Exception as e:
+            log(f"[重启] 拉起新进程失败：{e}", "error")
         os._exit(0)
 
     def _on_open_folder(self):
