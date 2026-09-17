@@ -128,13 +128,6 @@ def main():
     from tamias import __version__
     log(f"栗栗启动 v{__version__}，界面语言 {settings.language}")
 
-    # ---------- 浏览器弹出追踪（诊断用，定位后删） ----------
-    # 启动早期就起一个后台进程创建监视器，覆盖「启动 → dsh 拉起 → 浏览器弹出」全程。
-    # 复现「启动就弹 dsh 网页」后，读 logs/browser_watch.log 看浏览器进程的父进程
-    # PID 是谁，即可锁定真凶（详见 browser_watch.py 模块头注释）。
-    from tamias.browser_watch import start_browser_watch
-    start_browser_watch()
-
     # ---------- 加载界面字体（中英鸿蒙 / 日文思源黑体 JP / 等宽 JetBrains Mono） ----------
     # 注册打包字体 + 按界面语言设全局默认字体；必须在创建任何控件之前调用。
     # 日语界面走 Noto Sans JP（正宗日文字形），中英界面走鸿蒙（HarmonyOS Sans SC）。

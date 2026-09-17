@@ -16,8 +16,7 @@
 > If you find significant problems, please report them via [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues).
 
 > An AI Agent desktop pet — your desktop AI butler for Windows: chats with you and does real work for you
-> (reads files, writes code, edits files), with every action passing your approval first, and mistakes
-> rollable back in one click.
+> (reads files, writes code, edits files), and rolls back mistakes in one click.
 > 栗栗 is a squirrel detective in a plaid trench coat and deerstalker hat, with the
 > temperament of a "clear-eyed college student".
 

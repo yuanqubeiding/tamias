@@ -505,8 +505,7 @@ def start_dsh(settings) -> Optional[str]:
     if dsh_log is not subprocess.DEVNULL:
         dsh_log.close()  # 父进程侧关掉句柄，子进程仍持有 fd 继续写
 
-    # 补记 dsh 引擎进程 PID：配合 browser_watch.log（进程创建追踪）锁定「启动时谁弹的
-    # 浏览器」——复现后看 browser_watch.log 里浏览器进程的父进程 PID 是否等于这里的 PID。
+    # 补记 dsh 引擎进程 PID，便于诊断时对照。
     log(f"dsh 引擎进程已拉起：node.exe PID={_dsh_process.pid}")
 
     # 6. 轮询就绪，成功则记录端口供下次复用
