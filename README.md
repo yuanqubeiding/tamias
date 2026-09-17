@@ -87,6 +87,15 @@ Some of 栗栗's interaction designs reference established paradigms from excell
 
 Thanks to the teams behind these tools for saving us from many design pitfalls.
 
+## Contributing
+
+Contributions are welcome! Bug reports, feature suggestions, and pull requests are all appreciated.
+
+- Bugs / suggestions: open an [issue](https://github.com/yuanqubeiding/tamias/issues) with the right template
+- Code / docs / translations: see [CONTRIBUTING](CONTRIBUTING.md)
+
+> Note: illustrations, animations, icons and the persona are copyright-reserved assets, not open-sourced under Apache-2.0 — see [Asset License](ASSETS_LICENSE.md).
+
 ## Author
 
 © 2026 栗栗 (Tamias) author

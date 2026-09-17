@@ -85,6 +85,15 @@ PixiJS（MIT）、Lucide 图标（ISC）等。
 
 感谢这些工具背后的团队，让我们少踩很多设计上的坑。
 
+## 贡献
+
+欢迎参与栗栗的改进！报 bug、提建议、改代码提 PR，都很欢迎。
+
+- 报 bug / 提建议：到 [GitHub Issues](https://github.com/yuanqubeiding/tamias/issues) 用对应模板
+- 改代码 / 文档 / 翻译：见 [贡献指南](CONTRIBUTING.zh.md)
+
+> 注：立绘、动画、图标、人设等素材保留版权，不随代码开源，详见 [素材版权声明](ASSETS_LICENSE.md)。
+
 ## 作者
 
 © 2026 栗栗（Tamias）作者
