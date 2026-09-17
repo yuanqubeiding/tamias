@@ -641,7 +641,7 @@ class DshGateway:
             questions = payload.get("questions", []) or []
             empty = [{"id": q.get("id", ""), "selected": []} for q in questions]
             try:
-                self.answer_question(rpc_id, payload.get("sessionId", ""), empty)
+                self.answer_question(rpc_id, payload, empty)
             except Exception:
                 pass
 

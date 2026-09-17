@@ -32,7 +32,7 @@
 - **Work rollback**: a snapshot is taken before any change; one click restores exactly (side-by-side diff + one-click undo)
 - **Handy tools**: weather, Pomodoro timer, random decision, unit conversion, timed reminders
 - **Voice input**: hold-to-talk speech-to-text via Windows local offline recognition; audio is never uploaded
-- **Sprite animations**: 19 groups of animated reactions (yawn, poke, reading, thinking, …) plus a "spirit value" that fluctuates with interaction
+- **Sprite animations**: 19 groups of animated reactions (yawn, poke, reading, thinking, …) plus a "spirit value" that gets sleepy late at night
 
 <p align="center">
   <img src="docs/tamias-reading.png" alt="栗栗 reading" height="200"> <img src="docs/tamias-poke.png" alt="栗栗 being poked" height="200">

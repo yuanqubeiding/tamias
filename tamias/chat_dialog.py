@@ -279,12 +279,15 @@ class ChatDialog(QDialog):
         title_center.addStretch()
         title_bar.addLayout(title_center, stretch=1)
 
-        # 摇人按钮
+        # 摇人按钮：原「摇人（团队合作）」= 多 Agent 协作，已放弃（multi-agent 封存）。
+        # 发布前暂时隐藏——点它只会「撬单实例锁 + 起第二只共享 config 的栗栗」，既非团队合作、
+        # 又踩状态（两只抢 work_dir/配置），且打包版 `sys.executable -m tamias.main` 对 exe 无效。
+        # 以后做「多开隔离」再启用（见 todo 72）；_on_call/_do_call 保留作多开种子。
         self._call_btn = apply_icon(QPushButton(), "phone", tr("📞"), size=16)
         self._call_btn.setFixedSize(28, 28)
         self._call_btn.setFont(ui_font(10))
         self._call_btn.setToolTip(tr("摇人（团队合作）"))
-        self._call_btn.setVisible(self._pro_mode)
+        self._call_btn.setVisible(False)  # 暂时隐藏，发布后做「多开」再开
         self._call_btn.clicked.connect(self._on_call)
         self._call_btn.setStyleSheet("""
             QPushButton { background: transparent; color: #888; border: 1px solid #444; border-radius: 4px; }
