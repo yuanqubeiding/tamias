@@ -1,5 +1,7 @@
 # 栗栗（Tamias）— 松鼠侦探 · AI Agent 桌宠
 
+*AI 桌宠 · AI 智能体 · 桌面宠物 · AI 助手 · 虚拟管家 · Windows 桌面 AI*
+
 > [English](README.md)
 
 <p align="center">

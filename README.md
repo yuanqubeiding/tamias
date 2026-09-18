@@ -1,5 +1,7 @@
 # 栗栗 (Tamias) — Squirrel Detective · AI Agent Desktop Pet
 
+*AI desktop pet · AI agent · virtual assistant · desktop companion · AI assistant for Windows*
+
 > [中文版](README.zh.md)
 
 <p align="center">
